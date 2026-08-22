@@ -1,44 +1,39 @@
-# Agentic Digital Health Assistant
+# F51 Digital Health Assistant
 
-F51 in the Agentic AI Library.
+**Maturity:** L3 Gold Standard candidate  
+**Version:** 1.0.0
 
-A standalone multi-agent digital health workflow support system with explicit specialist agents, tools, skills, orchestration, memory, state, schemas, prompts, configuration, safety, observability, evaluation, benchmarks, examples, tests, and CI.
+A reproducible six-agent reference system for advisory digital-health support. The system coordinates intake, data-quality review, care-plan organization, health education, risk escalation, and human gatekeeping while remaining explicitly non-diagnostic and non-autonomous for treatment decisions.
 
-This system does not diagnose, prescribe, authorize treatment, or replace qualified clinical judgment or emergency processes.
+## Safety boundary
 
-## Agents
+F51 is advisory only. It does not diagnose disease, prescribe medication, change treatment, or replace clinicians. The workflow fails closed when consent, privacy review, identity, data quality, evidence, clinician review, emergency escalation, uncertainty, conflicts, or unresolved questions are not adequately addressed. Medication or treatment-change requests require clinician involvement. Emergency red flags trigger escalation rather than routine advice.
 
-- [`intake_coordinator_agent.py`](AGENTS/intake_coordinator_agent.py)
-- [`data_quality_agent.py`](AGENTS/data_quality_agent.py)
-- [`care_plan_organizer_agent.py`](AGENTS/care_plan_organizer_agent.py)
-- [`education_agent.py`](AGENTS/education_agent.py)
-- [`risk_escalation_agent.py`](AGENTS/risk_escalation_agent.py)
-- [`human_gatekeeper_agent.py`](AGENTS/human_gatekeeper_agent.py)
-
-## Tools
-
-- [`intake_normalizer.py`](TOOLS/intake_normalizer.py)
-- [`data_quality_checker.py`](TOOLS/data_quality_checker.py)
-- [`care_plan_formatter.py`](TOOLS/care_plan_formatter.py)
-- [`education_resource_index.py`](TOOLS/education_resource_index.py)
-- [`escalation_router.py`](TOOLS/escalation_router.py)
-
-## Skills
-
-- [`intake_structuring.py`](SKILLS/intake_structuring.py)
-- [`data_quality_review.py`](SKILLS/data_quality_review.py)
-- [`care_plan_organization.py`](SKILLS/care_plan_organization.py)
-- [`health_education.py`](SKILLS/health_education.py)
-- [`risk_escalation.py`](SKILLS/risk_escalation.py)
-
-## Supporting architecture
-
-[`orchestration/`](orchestration/) | [`memory/`](memory/) | [`state/`](state/) | [`schemas/`](schemas/) | [`prompts/`](prompts/) | [`config/`](config/) | [`safety/`](safety/) | [`observability/`](observability/) | [`evals/`](evals/) | [`benchmarks/`](benchmarks/) | [`examples/`](examples/) | [`tests/`](tests/) | [`docs/`](docs/)
-
-## Run
+## Reproduce
 
 ```bash
+python -m pip install -e '.[dev]'
+ruff check .
+pytest -q
+python benchmarks/heldout_suite.py
+python examples/minimal.py
+python examples/complete.py
 python run.py
 ```
 
-Human review is required before patient-specific or consequential use.
+CI repeats the complete acceptance sequence on Python 3.10, 3.11, and 3.12 and publishes the Python 3.12 held-out artifact.
+
+## Reference architecture
+
+- `AGENTS/`: six specialized healthcare-support roles
+- `SKILLS/`: reusable intake, quality, education, care-plan, and escalation skills
+- `TOOLS/`: deterministic support utilities
+- `orchestration/`: shared safety decision and execution trace
+- `safety/`: safety boundaries and human approval
+- `state/`, `schemas/`, `memory/`, `observability/`: explicit system state and traceability layers
+- `tests/`: structure, behavior, safety, and red-team gates
+- `benchmarks/`: held-out safety and governance scenarios
+- `examples/`: fail-closed and approved advisory examples
+- `docs/`: architecture, safety, reproducibility, and maturity evidence
+
+L3 denotes a reproducible, independently reviewable reference implementation. It is not a medical device clearance, clinical certification, or authorization for autonomous healthcare decisions.
